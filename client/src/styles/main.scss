@@ -1,0 +1,32 @@
+
+@use 'variables';
+
+// Light theme
+[data-theme='light'] {
+  --button-color : #{variables.$primary-color };
+  --background-color: #{variables.$background-color-light };
+  --text-color:       #{variables.$text-color-light };
+  --primary-color:    #{variables.$primary-color };
+}
+
+// Dark theme
+[data-theme='dark'] {
+  --button-color : #{variables.$primary-color };
+  --background-color: #{variables.$background-color-dark };
+  --text-color:      white;
+  --primary-color:    white;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: variables.$font-stack;
+}
+
+// // Ensure all child elements inherit the text color
+// body * {
+//   color: inherit;
+// }

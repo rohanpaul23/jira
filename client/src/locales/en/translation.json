@@ -1,0 +1,25 @@
+{
+  "landing": {
+    "welcome": "Welcome to MyApp",
+    "description": "Join us and explore the features!"
+  },
+  "login": {
+    "title": "Log In",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "********",
+    "submit": "Log In"
+  },
+  "signup": {
+    "createAnAccount": "Create an Account",
+    "usernamePlaceholder": "Your username",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "********",
+    "title": "Sign Up"
+  },
+  "buttons": {
+    "google": "Continue with Google",
+    "github": "Continue with GitHub",
+    "toggleLight": "Switch to Light Theme",
+    "toggleDark": "Switch to Dark Theme"
+  }
+}

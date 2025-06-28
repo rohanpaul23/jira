@@ -1,0 +1,16 @@
+// frontend/src/styles/_variables.scss
+
+// Color palette
+$primary-color:           #1d4ed8;
+$secondary-color:         #9333ea;
+$success-color:           #16a34a;
+$error-color:             #dc2626;
+$font-stack:              'Inter', sans-serif;
+
+// Light-mode tokens
+$background-color-light:  #f8fafc;
+$text-color-light:        $primary-color;
+
+// Dark-mode tokens
+$background-color-dark:   #1f2937;
+$text-color-dark:         #f9fafb;

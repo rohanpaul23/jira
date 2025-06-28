@@ -1,0 +1,25 @@
+{
+  "landing": {
+    "welcome": "ನನ್ನ ಆಪ್‌ಗೆ ಸ್ವಾಗತ",
+    "description": "ನಮ್ಮ ಜೊತೆ ಸೇರಿ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಅನ್ವೇಷಿಸಿ!"
+  },
+  "login": {
+    "title": "ಲಾಗಿನ್",
+    "emailPlaceholder": "ನಿಮ್ಮ ಇಮೇಲ್ ಕೊಡಿ",
+    "passwordPlaceholder": "********",
+    "submit": "ಲಾಗಿನ್"
+  },
+  "signup": {
+    "title": "ಖಾತೆ ನಿರ್ಮಿಸಿ",
+    "usernamePlaceholder": "ನಿಮ್ಮ ಬಳಕೆದಾರ ಹೆಸರು",
+    "emailPlaceholder": "ನಿಮ್ಮ ಇಮೇಲ್ ಕೊಡಿ",
+    "passwordPlaceholder": "********",
+    "submit": "ಸೈನ್‌ಅಪ್"
+  },
+  "buttons": {
+    "google": "Google ಮೂಲಕ ಮುಂದುವರಿಸಿ",
+    "github": "GitHub ಮೂಲಕ ಮುಂದುವರಿಸಿ",
+    "toggleLight": "ಬೆಳಕು ಥೀಮ್ಗೆ ಬದಲಾಯಿಸಿ",
+    "toggleDark": "ಕತ್ತಲಿ ಥೀಮ್ಗೆ ಬದಲಾಯಿಸಿ"
+  }
+}
