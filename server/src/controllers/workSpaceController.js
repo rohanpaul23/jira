@@ -5,7 +5,20 @@ import Workspace from "../models/WorkSpace.js";
  */
 export const getAllWorkspaces = async (req, res) => {
   try {
-    const workspaces = await Workspace.find()
+    const { onlyMemberWorkspaces } = req.query;
+    const userId = req.user.id; // from authenticateToken middleware
+
+    let filter = {};
+    if (onlyMemberWorkspaces === 'true') {
+      filter = {
+        $or: [
+          { owner: userId },
+          { 'members.user': userId }
+        ]
+      };
+    }
+
+    const workspaces = await Workspace.find(filter)
       .populate('owner', 'username email')
       .populate('members.user', 'username email');
     res.json(workspaces);

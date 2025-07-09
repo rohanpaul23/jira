@@ -15,6 +15,8 @@ import Dashboard from './pages/Dashboard';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedLayout from './pages/components/ProtectedLayout';
+import { store } from './store/store';
+import { Provider } from 'react-redux';
 
 
 
@@ -77,8 +79,8 @@ const App: React.FC = () => {
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Root element not found');
 createRoot(rootElement).render(
+   <Provider store={store}>
   <QueryClientProvider client={queryClient}>
-
     <BrowserRouter>
       <Theme>
         <Suspense fallback={<div>Loading translations…</div>}>
@@ -87,4 +89,5 @@ createRoot(rootElement).render(
       </Theme>
     </BrowserRouter>
   </QueryClientProvider>
+  </Provider>
 );

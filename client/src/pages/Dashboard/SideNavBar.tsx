@@ -13,9 +13,9 @@ import CreateWorkspace from '../Workspaces/CreateWorkpace';
 
 const SideNavBar = () => {
   const [t] = useTranslation();
-  const { data, error, isLoading } = useWorkspaces();
+  // const { data, error, isLoading } = useWorkspaces();
   const [createWorkspace,setCreateWorkspace] = useState(false)
-
+  const data = []
   const [selectedMenuItem, setSelectedMenuItem] = useState();
 
   const menuItems = [

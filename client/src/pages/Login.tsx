@@ -9,6 +9,10 @@ import { FcGoogle } from "react-icons/fc";
 import { IoMdLogIn } from "react-icons/io";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from "../store/reducers/authReducer";
+import { fetchWorkspacesRequest, fetchWorkspacesSuccess } from "../store/reducers/workspaceReducer";
 
 
 const containerStyle = css`
@@ -52,6 +56,8 @@ const Login: React.FC = () => {
 
   const [t] = useTranslation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -66,7 +72,19 @@ const Login: React.FC = () => {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
+      dispatch(setCredentials(data.userId, data.email, data.token));
       localStorage.setItem('token', data.token);
+      dispatch(fetchWorkspacesRequest());
+      try {
+        const wsRes = await fetch('/api/workspaces?onlyMemberWorkspaces=true', {
+          headers: { Authorization: `Bearer ${data.token}` },
+        });
+        if (!wsRes.ok) throw new Error(wsRes.statusText);
+        const workspaces = await wsRes.json();
+        dispatch(fetchWorkspacesSuccess(workspaces));
+      } catch (err: any) {
+        dispatch(fetchWorkspacesFailure(err.message));
+      }
       navigate("/dashboard")
     } catch (err) {
       console.error("Login failed:", err);

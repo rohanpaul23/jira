@@ -4,10 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 
 const fetchWorkspaces = async () => {
-  // const token = import.meta.env.VITE_API_TOKEN
-
   const authToken = localStorage.getItem('token')
-
   console.log("authToken",authToken)
   console.log("fetchWorkspaces")
   const headers = {
@@ -15,12 +12,14 @@ const fetchWorkspaces = async () => {
     'Content-Type': 'application/json',
   };
 
-  const response = await fetch('/api/workspaces',{
+  const response = await fetch('/api/workspaces?onlyMemberWorkspaces=true',{
     method: 'GET',
     headers,
   });
-
-  console.log(response)
+  if(response.ok){
+    const data = await response.json();
+    console.log("data",data);
+  }
   if (!response.ok) {
     throw new Error(response.statusText);
   }
@@ -34,8 +33,5 @@ export const useWorkspaces = () => {
     queryFn: fetchWorkspaces,
     enabled: true,
   });
-  console.log('Data:', data);
-  console.log('Error:', error);
-  console.log('Loading:', isLoading);
   return { data, error, isLoading };
 };
