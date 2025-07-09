@@ -3,22 +3,32 @@
     "welcome": "Welcome to MyApp",
     "description": "Join us and explore the features!"
   },
-  "login": {
-    "title": "Log In",
+  "authentication" : {
+    "logIn": "Log In",
+    "userName": "Username",
+    "userNamePlaceholder": "Your username",
+    "email":"Email",
     "emailPlaceholder": "you@example.com",
+    "password":"Password",
     "passwordPlaceholder": "********",
-    "submit": "Log In"
-  },
-  "signup": {
     "createAnAccount": "Create an Account",
-    "usernamePlaceholder": "Your username",
-    "emailPlaceholder": "you@example.com",
-    "passwordPlaceholder": "********",
-    "title": "Sign Up"
-  },
-  "buttons": {
+    "signUp": "Sign Up",
+    "logOut":"Log Out",
     "google": "Continue with Google",
-    "github": "Continue with GitHub",
+    "github": "Continue with GitHub"
+  },
+  "workspaces" : {
+    "title": "Workspaces",
+    "createWorkspace": "Create Workspace",
+    "cancel":"Cancel",
+    "newWorkspace": "New Workspace",
+    "workspaceName": "Workspace Name",
+    "workspaceNamePlaceholder": "Workspace Name",
+    "workspaceDescription": "Workspace Description",
+    "workspaceDescriptionPlaceholder": "Workspace Description",
+    "workspaceMembers": "Workspace Members"
+  },
+  "themeSwitch": {
     "toggleLight": "Switch to Light Theme",
     "toggleDark": "Switch to Dark Theme"
   }

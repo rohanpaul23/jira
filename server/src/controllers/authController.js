@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
 export const registerUser = async (req, res) => {
@@ -15,7 +15,12 @@ export const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ email, password: hashedPassword });
 
-    res.status(201).json({ token: generateToken(user._id) });
+    res
+      .status(201)
+      .json({
+        token: generateToken(user._id),
+        user: { id: user._id, email: user.email },
+      });
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }
@@ -34,4 +39,15 @@ export const loginUser = async (req, res) => {
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }
+};
+
+export const logOutUser = (req, res) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token) {
+    revokeToken(token);
+    return res.json({ message: 'Logged out successfully' });
+  }
+  return res.status(400).json({ message: 'No token provided' });
 };

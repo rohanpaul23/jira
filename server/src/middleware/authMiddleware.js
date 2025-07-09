@@ -1,17 +1,29 @@
 import jwt from 'jsonwebtoken';
+import { isTokenRevoked } from './tokenBlackList.js';
 
-export const protect = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ msg: 'No token provided' });
+export const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized: token missing' });
   }
 
-  const token = authHeader.split(' ')[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { id: decoded.id };
+  if (isTokenRevoked(token)) {
+    return res.status(403).json({ message: 'Forbidden: token revoked' });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return err.name === 'TokenExpiredError'
+        ? res.status(403).json({ message: 'Forbidden: token expired' })
+        : res.status(403).json({ message: 'Forbidden: invalid token' });
+    }
+
+    // Attach user info to req.user with id alias
+    req.user = {
+      id: decoded.userId,
+      email: decoded.email,
+    };
     next();
-  } catch (err) {
-    res.status(401).json({ msg: 'Invalid token' });
-  }
+  });
 };

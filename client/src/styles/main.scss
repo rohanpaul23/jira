@@ -26,6 +26,20 @@ html, body {
   font-family: variables.$font-stack;
 }
 
+.modal {
+  top: 20% !important;
+  left: 38% !important;
+}
+
+.modal-title {
+  font-weight: 300 !important;
+}
+
+::placeholder {
+    font-weight: 100 !important;
+    color:black !important;
+}
+
 // // Ensure all child elements inherit the text color
 // body * {
 //   color: inherit;

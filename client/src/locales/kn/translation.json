@@ -1,25 +1,24 @@
 {
   "landing": {
-    "welcome": "ನನ್ನ ಆಪ್‌ಗೆ ಸ್ವಾಗತ",
-    "description": "ನಮ್ಮ ಜೊತೆ ಸೇರಿ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಅನ್ವೇಷಿಸಿ!"
+    "welcome": "ನಾನು ಆಪ್‌ಗೆ ಸ್ವಾಗತ",
+    "description": "ನಮ್ಮೊಂದಿಗೆ ಸೇರಿ ವೈಶಿಷ್ಟ್ಯಗಳನ್ನು ಅನ್ವೇಷಿಸಿ!"
   },
-  "login": {
-    "title": "ಲಾಗಿನ್",
+  "authentication": {
+    "logIn": "ಲಾಗಿನ್",
+    "userName": "ಬಳಕೆದಾರಹೆಸರು",
+    "userNamePlaceholder": "ನಿಮ್ಮ ಬಳಕೆದಾರಹೆಸರು",
+    "email": "ಇಮೇಲ್",
     "emailPlaceholder": "ನಿಮ್ಮ ಇಮೇಲ್ ಕೊಡಿ",
+    "password": "ಗುಪ್ತಪದ",
     "passwordPlaceholder": "********",
-    "submit": "ಲಾಗಿನ್"
-  },
-  "signup": {
-    "title": "ಖಾತೆ ನಿರ್ಮಿಸಿ",
-    "usernamePlaceholder": "ನಿಮ್ಮ ಬಳಕೆದಾರ ಹೆಸರು",
-    "emailPlaceholder": "ನಿಮ್ಮ ಇಮೇಲ್ ಕೊಡಿ",
-    "passwordPlaceholder": "********",
-    "submit": "ಸೈನ್‌ಅಪ್"
-  },
-  "buttons": {
+    "createAnAccount": "ಖಾತೆ ನಿರ್ಮಿಸಿ",
+    "signUp": "ಸೈನ್‌ಅಪ್",
+    "logOut": "ಲಾಗ್‌ಔಟ್",
     "google": "Google ಮೂಲಕ ಮುಂದುವರಿಸಿ",
-    "github": "GitHub ಮೂಲಕ ಮುಂದುವರಿಸಿ",
+    "github": "GitHub ಮೂಲಕ ಮುಂದುವರಿಸಿ"
+  },
+  "themeSwitch": {
     "toggleLight": "ಬೆಳಕು ಥೀಮ್ಗೆ ಬದಲಾಯಿಸಿ",
-    "toggleDark": "ಕತ್ತಲಿ ಥೀಮ್ಗೆ ಬದಲಾಯಿಸಿ"
+    "toggleDark": "ಕತ್ತಲೆ ಥೀಮ್ಗೆ ಬದಲಾಯಿಸಿ"
   }
 }

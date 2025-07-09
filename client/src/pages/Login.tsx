@@ -8,6 +8,7 @@ import { FaGoogle, FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { IoMdLogIn } from "react-icons/io";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from 'react-router-dom';
 
 
 const containerStyle = css`
@@ -50,6 +51,7 @@ const LoginSchema = Yup.object({
 const Login: React.FC = () => {
 
   const [t] = useTranslation();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -64,7 +66,8 @@ const Login: React.FC = () => {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      console.log("Login success:", data);
+      localStorage.setItem('token', data.token);
+      navigate("/dashboard")
     } catch (err) {
       console.error("Login failed:", err);
     }
@@ -123,7 +126,7 @@ const Login: React.FC = () => {
                 {errors.password && touched.password && errors.password}
                 <Button type="submit" onClick={handleSubmit} size="2" variant="solid">
                   <IoMdLogIn style={{ marginRight: "0.5rem" }} />
-                  {t("login.title")}
+                  {t("authentication.logIn")}
                 </Button>
               </form>
             )}
@@ -131,11 +134,11 @@ const Login: React.FC = () => {
           <div css={oauthButtonGroup}>
             <Button onClick={() => handleOAuth("google")} size="2" variant="outline">
               <FcGoogle style={{ marginRight: "0.5rem" }} /> 
-              <span css={css`color:black`}>{t("buttons.google")}</span>
+              <span css={css`color:black`}>{t("authentication.google")}</span>
             </Button>
             <Button css={css`color:black`} onClick={() => handleOAuth("github")} size="2" variant="outline">
               <FaGithub style={{ marginRight: "0.5rem" }} /> 
-              <span>{t("buttons.github")}</span>
+              <span>{t("authentication.github")}</span>
             </Button>
           </div>
         </div>

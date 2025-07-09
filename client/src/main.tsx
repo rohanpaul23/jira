@@ -2,7 +2,7 @@ import '@radix-ui/themes/styles.css';
 import React, { useState, Suspense } from 'react';
 import { css } from '@emotion/react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Theme } from '@radix-ui/themes';
 import { FaSun, FaMoon } from 'react-icons/fa';
 import './styles/main.scss';
@@ -11,8 +11,14 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import { useTranslation } from 'react-i18next';
 import './i18n';
+import Dashboard from './pages/Dashboard';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import ProtectedLayout from './pages/components/ProtectedLayout';
 
 
+
+const queryClient = new QueryClient();
 
 // Container styling using Emotion CSS
 const containerStyle = css`
@@ -51,25 +57,17 @@ const App: React.FC = () => {
 
   return (
     <div data-theme={theme} css={containerStyle}>
-      <button
-        onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-        css={themeToggleStyle}
-        aria-label="Toggle theme"
-      >
-        {theme === 'light' ? <FaMoon /> : <FaSun />}
-      </button>
-      <select
-        value={i18n.language}
-        onChange={(e) => i18n.changeLanguage(e.target.value)}
-        css={langSelectorStyle}
-      >
-        <option value="en">EN</option>
-        <option value="kn">ಕನ್ನಡ</option>
-      </select>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Landing />} />
         <Route path="/signup" element={<Landing />} />
+        
+
+      <Route element={<ProtectedLayout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
@@ -79,11 +77,14 @@ const App: React.FC = () => {
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Root element not found');
 createRoot(rootElement).render(
-  <BrowserRouter>
-    <Theme>
-       <Suspense fallback={<div>Loading translations…</div>}>
-        <App />
-      </Suspense>
-    </Theme>
-  </BrowserRouter>
+  <QueryClientProvider client={queryClient}>
+
+    <BrowserRouter>
+      <Theme>
+        <Suspense fallback={<div>Loading translations…</div>}>
+          <App />
+        </Suspense>
+      </Theme>
+    </BrowserRouter>
+  </QueryClientProvider>
 );

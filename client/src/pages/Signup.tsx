@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import * as Label from '@radix-ui/react-label';
 import { Card, Text, Button } from '@radix-ui/themes';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const containerStyle = css`
   display: flex;
@@ -25,12 +26,19 @@ const inputStyle = css`
   font-size: 1rem;
 `;
 
+const signUpErrorMessage = css`
+  color: red !important;
+  margin: 0.5rem 0;
+`;
+
 const Signup: React.FC = () => {
 
   const [t] = useTranslation()
+  const navigate = useNavigate();
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [signUpError, setSignUpError] = useState<string>('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,10 +48,18 @@ const Signup: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password }),
       });
+      console.log("Res",res)
+     
       const data = await res.json();
-      console.log('Signup success:', data);
+      if (!res.ok && data.msg === 'User already exists') { 
+        throw "A user with the entered email already exists";
+      }
+      else if(!res.ok) throw "Signup failed"
+      localStorage.setItem('token', data.token);
+      navigate("/dashboard")
     } catch (err) {
       console.error('Signup failed:', err);
+      setSignUpError(err)
     }
   };
 
@@ -51,39 +67,40 @@ const Signup: React.FC = () => {
     <div css={containerStyle}>
       <Card size="2" variant="surface" css={cardStyle}>
         <div css={innerStyle}>
-          <Text as="h2" size="3" weight="bold">{t('signup.createAnAccount')}</Text>
+          <Text as="h2" size="3" weight="bold">{t('authentication.createAnAccount')}</Text>
+          {signUpError ? <div css={signUpErrorMessage}>{signUpError}</div> : <></>}
           <form css={formStyle} onSubmit={handleSubmit}>
-            <Label.Root htmlFor="username">{t('signup.username')}</Label.Root>
+            <Label.Root htmlFor="username">{t('authentication.userName')}</Label.Root>
             <input
-              id="username"
+              id="username"x
               css={inputStyle}
-              placeholder="Your username"
+              placeholder={t('authentication.userNamePlaceholder')}
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
             />
-            <Label.Root htmlFor="email">{t('signup.email')}</Label.Root>
+            <Label.Root htmlFor="email">{t('authentication.email')}</Label.Root>
             <input
               id="email"
               css={inputStyle}
-              placeholder="you@example.com"
+              placeholder={t('authentication.emailPlaceholder')}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <Label.Root htmlFor="password">{t('signup.password')}</Label.Root>
+            <Label.Root htmlFor="password">{t('authentication.password')}</Label.Root>
             <input
               id="password"
               css={inputStyle}
-              placeholder="********"
+              placeholder={t('authentication.passwordPlaceholder')}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <Button type="submit" size="2" css={css`width: 100%; margin-top: 0.5rem;`}>{t('signup.signup')}</Button>
+            <Button type="submit" size="2" css={css`width: 100%; margin-top: 0.5rem;`}>{t('authentication.signUp')}</Button>
           </form>
         </div>
       </Card>

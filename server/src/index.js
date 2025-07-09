@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRoutes from './routes/authRoutes.js';
+import apiRoutes from './routes/api.js';
 
 dotenv.config();
 
@@ -27,7 +27,7 @@ console.log(`🔗 Connecting to MongoDB [${env}]:`, mongoUri);
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
+app.use('/api', apiRoutes);
 
 app.get('/api/test-db', async (req, res) => {
   try {
