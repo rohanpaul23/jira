@@ -1,25 +1,27 @@
-import React, { useState, FormEvent } from "react";
-import { css } from "@emotion/react";
-import * as Label from "@radix-ui/react-label";
-import { Card, Text, Button } from "@radix-ui/themes";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { FaGoogle, FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
-import { IoMdLogIn } from "react-icons/io";
-import { useTranslation } from "react-i18next";
+import React, { useState, FormEvent } from 'react';
+import { css } from '@emotion/react';
+import * as Label from '@radix-ui/react-label';
+import { Card, Text, Button } from '@radix-ui/themes';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import { FaGoogle, FaGithub } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+import { IoMdLogIn } from 'react-icons/io';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { setCredentials } from "../store/reducers/authReducer";
-import { fetchWorkspacesRequest, fetchWorkspacesSuccess } from "../store/reducers/workspaceReducer";
-
+import { setCredentials } from '../store/reducers/authReducer';
+import {
+  fetchWorkspacesRequest,
+  fetchWorkspacesSuccess,
+} from '../store/reducers/workspaceReducer';
 
 const containerStyle = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex:1
+  flex: 1;
 `;
 const cardStyle = css`
   width: 400px;
@@ -48,29 +50,27 @@ const oauthButtonGroup = css`
 `;
 
 const LoginSchema = Yup.object({
-  email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string().required("Required"),
+  email: Yup.string().email('Invalid email').required('Required'),
+  password: Yup.string().required('Required'),
 });
 
 const Login: React.FC = () => {
-
   const [t] = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
 
   const dispatch = useDispatch();
 
-
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const login = async (values) => {
     // e.preventDefault();
-    const {email,password} = values
+    const { email, password } = values;
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
@@ -78,7 +78,7 @@ const Login: React.FC = () => {
       localStorage.setItem('token', data.token);
       navigate('/dashboard', { state: { from: location } });
     } catch (err) {
-      console.error("Login failed:", err);
+      console.error('Login failed:', err);
     }
   };
 
@@ -87,18 +87,18 @@ const Login: React.FC = () => {
       <Card size="2" variant="surface" css={cardStyle}>
         <div css={innerStyle}>
           <Text as="h2" size="3" weight="bold">
-           {t("landing.welcome")}
+            {t('landing.welcome')}
           </Text>
           <Formik
-            initialValues={{ email: "", password: "" }}
+            initialValues={{ email: '', password: '' }}
             validate={(values) => {
               const errors = {};
               if (!values.email) {
-                errors.email = "Required";
+                errors.email = 'Required';
               } else if (
                 !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
               ) {
-                errors.email = "Invalid email address";
+                errors.email = 'Invalid email address';
               }
               return errors;
             }}
@@ -133,21 +133,43 @@ const Login: React.FC = () => {
                   value={values.password}
                 />
                 {errors.password && touched.password && errors.password}
-                <Button type="submit" onClick={handleSubmit} size="2" variant="solid">
-                  <IoMdLogIn style={{ marginRight: "0.5rem" }} />
-                  {t("authentication.logIn")}
+                <Button
+                  type="submit"
+                  onClick={handleSubmit}
+                  size="2"
+                  variant="solid"
+                >
+                  <IoMdLogIn style={{ marginRight: '0.5rem' }} />
+                  {t('authentication.logIn')}
                 </Button>
               </form>
             )}
           </Formik>
           <div css={oauthButtonGroup}>
-            <Button onClick={() => handleOAuth("google")} size="2" variant="outline">
-              <FcGoogle style={{ marginRight: "0.5rem" }} /> 
-              <span css={css`color:black`}>{t("authentication.google")}</span>
+            <Button
+              onClick={() => handleOAuth('google')}
+              size="2"
+              variant="outline"
+            >
+              <FcGoogle style={{ marginRight: '0.5rem' }} />
+              <span
+                css={css`
+                  color: black;
+                `}
+              >
+                {t('authentication.google')}
+              </span>
             </Button>
-            <Button css={css`color:black`} onClick={() => handleOAuth("github")} size="2" variant="outline">
-              <FaGithub style={{ marginRight: "0.5rem" }} /> 
-              <span>{t("authentication.github")}</span>
+            <Button
+              css={css`
+                color: black;
+              `}
+              onClick={() => handleOAuth('github')}
+              size="2"
+              variant="outline"
+            >
+              <FaGithub style={{ marginRight: '0.5rem' }} />
+              <span>{t('authentication.github')}</span>
             </Button>
           </div>
         </div>

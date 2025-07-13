@@ -30,12 +30,7 @@ const Logo: React.FC<LogoProps> = ({
       lineHeight: 1,
     }}
   >
-    <SVGComponent
-      width={width}
-      height={height}
-      label={label}
-      {...svgProps}
-    />
+    <SVGComponent width={width} height={height} label={label} {...svgProps} />
     {label && (
       <span
         style={{

@@ -9,8 +9,6 @@ import type { RootState } from '../store/store';
  * - error: error message or null
  */
 export function useWorkspacesState() {
-  const { items, loading, error } = useSelector(
-    (state: RootState) => state.workspaces
-  );
-  return { workspaces: items, loading, error };
+  const { items } = useSelector((state: RootState) => state.workspaces);
+  return { workspaces: items };
 }

@@ -1,12 +1,8 @@
-import React from 'react'
-import { css } from '@emotion/react'
+import React from 'react';
+import { css } from '@emotion/react';
 
 const Home = () => {
-  return (
-    <div>
-      Home
-    </div>
-  )
-}
+  return <div>Home</div>;
+};
 
-export default Home
+export default Home;

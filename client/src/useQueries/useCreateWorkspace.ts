@@ -16,14 +16,14 @@ export interface WorkspaceInput {
 export function useCreateWorkspace() {
   const queryClient = useQueryClient();
 
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
   return useMutation({
     /**
      * Mutation function: calls backend to create a workspace.
      */
     // console.log("process.env.API_TOKEN",process.env.API_TOKEN)
     mutationFn: async (data: WorkspaceInput) => {
-      console.log("data",data)
+      console.log('data', data);
       const response = await fetch('/api/workspaces', {
         method: 'POST',
         headers: {

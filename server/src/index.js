@@ -9,7 +9,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-
 const env = process.env.NODE_ENV || 'development';
 
 let mongoUri = process.env.MONGO_URI;
@@ -22,7 +21,6 @@ if (!mongoUri) {
 }
 
 console.log(`🔗 Connecting to MongoDB [${env}]:`, mongoUri);
-
 
 app.use(cors());
 app.use(express.json());

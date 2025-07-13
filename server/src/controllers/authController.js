@@ -15,12 +15,10 @@ export const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ email, password: hashedPassword });
 
-    res
-      .status(201)
-      .json({
-        token: generateToken(user._id),
-        user: { id: user._id, email: user.email },
-      });
+    res.status(201).json({
+      token: generateToken(user._id),
+      user: { id: user._id, email: user.email },
+    });
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }

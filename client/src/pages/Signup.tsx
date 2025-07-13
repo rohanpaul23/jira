@@ -9,10 +9,14 @@ const containerStyle = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 9
+  flex: 9;
 `;
-const cardStyle = css`width: 400px;`;
-const innerStyle = css`padding: 1.5rem;`;
+const cardStyle = css`
+  width: 400px;
+`;
+const innerStyle = css`
+  padding: 1.5rem;
+`;
 const formStyle = css`
   display: flex;
   flex-direction: column;
@@ -32,8 +36,7 @@ const signUpErrorMessage = css`
 `;
 
 const Signup: React.FC = () => {
-
-  const [t] = useTranslation()
+  const [t] = useTranslation();
   const navigate = useNavigate();
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -48,18 +51,17 @@ const Signup: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password }),
       });
-      console.log("Res",res)
-     
+      console.log('Res', res);
+
       const data = await res.json();
-      if (!res.ok && data.msg === 'User already exists') { 
-        throw "A user with the entered email already exists";
-      }
-      else if(!res.ok) throw "Signup failed"
+      if (!res.ok && data.msg === 'User already exists') {
+        throw 'A user with the entered email already exists';
+      } else if (!res.ok) throw 'Signup failed';
       localStorage.setItem('token', data.token);
-      navigate("/dashboard")
+      navigate('/dashboard');
     } catch (err) {
       console.error('Signup failed:', err);
-      setSignUpError(err)
+      setSignUpError(err);
     }
   };
 
@@ -67,12 +69,21 @@ const Signup: React.FC = () => {
     <div css={containerStyle}>
       <Card size="2" variant="surface" css={cardStyle}>
         <div css={innerStyle}>
-          <Text as="h2" size="3" weight="bold">{t('authentication.createAnAccount')}</Text>
-          {signUpError ? <div css={signUpErrorMessage}>{signUpError}</div> : <></>}
+          <Text as="h2" size="3" weight="bold">
+            {t('authentication.createAnAccount')}
+          </Text>
+          {signUpError ? (
+            <div css={signUpErrorMessage}>{signUpError}</div>
+          ) : (
+            <></>
+          )}
           <form css={formStyle} onSubmit={handleSubmit}>
-            <Label.Root htmlFor="username">{t('authentication.userName')}</Label.Root>
+            <Label.Root htmlFor="username">
+              {t('authentication.userName')}
+            </Label.Root>
             <input
-              id="username"x
+              id="username"
+              x
               css={inputStyle}
               placeholder={t('authentication.userNamePlaceholder')}
               type="text"
@@ -90,7 +101,9 @@ const Signup: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <Label.Root htmlFor="password">{t('authentication.password')}</Label.Root>
+            <Label.Root htmlFor="password">
+              {t('authentication.password')}
+            </Label.Root>
             <input
               id="password"
               css={inputStyle}
@@ -100,7 +113,16 @@ const Signup: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <Button type="submit" size="2" css={css`width: 100%; margin-top: 0.5rem;`}>{t('authentication.signUp')}</Button>
+            <Button
+              type="submit"
+              size="2"
+              css={css`
+                width: 100%;
+                margin-top: 0.5rem;
+              `}
+            >
+              {t('authentication.signUp')}
+            </Button>
           </form>
         </div>
       </Card>
@@ -109,4 +131,3 @@ const Signup: React.FC = () => {
 };
 
 export default Signup;
-

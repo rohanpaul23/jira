@@ -1,6 +1,6 @@
-import Workspace from "../models/WorkSpace.js";
-import { body, param, validationResult } from 'express-validator'
-import mongoose from "mongoose";
+import Workspace from '../models/WorkSpace.js';
+import { body, param, validationResult } from 'express-validator';
+import mongoose from 'mongoose';
 
 /**
  * Get all workspaces
@@ -13,10 +13,7 @@ export const getAllWorkspaces = async (req, res) => {
     let filter = {};
     if (onlyMemberWorkspaces === 'true') {
       filter = {
-        $or: [
-          { owner: userId },
-          { 'members.user': userId }
-        ]
+        $or: [{ owner: userId }, { 'members.user': userId }],
       };
     }
 
@@ -56,7 +53,9 @@ export const createWorkspace = async (req, res) => {
   console.log('Auth header:', req.headers.authorization);
   console.log('req.user:', req.user);
   if (!req.user?.id) {
-    return res.status(401).json({ message: 'Unauthorized: missing or invalid token' });
+    return res
+      .status(401)
+      .json({ message: 'Unauthorized: missing or invalid token' });
   }
   const { name, description, members } = req.body;
   const ownerId = req.user.id; // assuming authenticateToken sets req.user.userId
@@ -66,13 +65,10 @@ export const createWorkspace = async (req, res) => {
       name,
       description,
       owner: ownerId,
-      members: [
-        { user: ownerId, role: 'owner' },
-        ...(members || [])
-      ]
+      members: [{ user: ownerId, role: 'owner' }, ...(members || [])],
     });
     await workspace.save();
-    console.log("workspace saved",workspace)
+    console.log('workspace saved', workspace);
     res.status(201).json(workspace);
   } catch (err) {
     console.error('Error creating workspace:', err);
@@ -94,10 +90,15 @@ export const updateWorkspace = async (req, res) => {
     }
     // Only owner or admin can update
     const userId = req.user.userId;
-    const isAllowed = workspace.owner.equals(userId) ||
-      workspace.members.some(m => m.user.equals(userId) && ['admin'].includes(m.role));
+    const isAllowed =
+      workspace.owner.equals(userId) ||
+      workspace.members.some(
+        (m) => m.user.equals(userId) && ['admin'].includes(m.role),
+      );
     if (!isAllowed) {
-      return res.status(403).json({ message: 'Forbidden: insufficient permissions' });
+      return res
+        .status(403)
+        .json({ message: 'Forbidden: insufficient permissions' });
     }
 
     // Apply updates
@@ -113,69 +114,69 @@ export const updateWorkspace = async (req, res) => {
   }
 };
 
-
 export const deleteWorkspace = async (req, res) => {
   try {
     const workspaceId = req.params.workspaceId;
-    console.log("workspaceId",workspaceId)
+    console.log('workspaceId', workspaceId);
     const workspace = await Workspace.findById(workspaceId);
     if (!workspace) {
       return res.status(404).json({ message: 'Workspace not found' });
     }
 
-    console.log("req.user.id", req.user.id)
+    console.log('req.user.id', req.user.id);
     // Check if the user making the request is the owner of the workspace
-    console.log("workspaceowener",workspace.owner.toString())
+    console.log('workspaceowener', workspace.owner.toString());
     if (workspace.owner.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'Only the owner can delete this workspace' });
+      return res
+        .status(403)
+        .json({ message: 'Only the owner can delete this workspace' });
     }
 
     await workspace.deleteOne();
     return res.status(200).json({ message: 'Workspace deleted successfully' });
   } catch (error) {
-    console.log("error",error)
+    console.log('error', error);
     return res.status(500).json({ message: 'Error deleting workspace' });
   }
 };
 
-
 const validate = (req, res, next) => {
-  const errors = validationResult(req)
+  const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
+    return res.status(400).json({ errors: errors.array() });
   }
-  next()
-}
-
-
+  next();
+};
 
 // GET /api/workspaces/:id/invite
 export const getInviteCode = [
- //Validates that :id is a valid MongoDB ObjectId.
- // Looks up the workspace by ID.
+  //Validates that :id is a valid MongoDB ObjectId.
+  // Looks up the workspace by ID.
   param('id').isMongoId(),
   validate,
   async (req, res) => {
     try {
-      const ws = await Workspace.findById(req.params.id)
+      const ws = await Workspace.findById(req.params.id);
       if (!ws) {
-        return res.status(404).json({ message: 'Workspace not found' })
+        return res.status(404).json({ message: 'Workspace not found' });
       }
-      const userId = req.user.id
+      const userId = req.user.id;
       const allowed =
         ws.owner.equals(userId) ||
         ws.members.some(
-          m => m.user.equals(userId) && ['owner', 'admin'].includes(m.role)
-        )
+          (m) => m.user.equals(userId) && ['owner', 'admin'].includes(m.role),
+        );
       if (!allowed) {
-        return res.status(403).json({ message: 'Only Admin or Owner can invite members ' })
+        return res
+          .status(403)
+          .json({ message: 'Only Admin or Owner can invite members ' });
       }
-      return res.json({ inviteCode: ws.inviteCode })
+      return res.json({ inviteCode: ws.inviteCode });
     } catch (error) {
-      return res.status(500).json({ message: 'Server error' })
+      return res.status(500).json({ message: 'Server error' });
     }
-  }
-]
+  },
+];
 
 // POST /api/workspaces/join
 export const joinWorkspace = [
@@ -183,22 +184,21 @@ export const joinWorkspace = [
   validate,
   async (req, res) => {
     try {
-      const userId = req.user.id
-      const { inviteCode } = req.body
-      const ws = await Workspace.findOne({ inviteCode })
+      const userId = req.user.id;
+      const { inviteCode } = req.body;
+      const ws = await Workspace.findOne({ inviteCode });
       if (!ws) {
-        return res.status(404).json({ message: 'Invalid invite code' })
+        return res.status(404).json({ message: 'Invalid invite code' });
       }
-      const alreadyMember = ws.members.some(m => m.user.equals(userId))
+      const alreadyMember = ws.members.some((m) => m.user.equals(userId));
       if (alreadyMember) {
-        return res.status(400).json({ message: 'Already a member' })
+        return res.status(400).json({ message: 'Already a member' });
       }
-      ws.members.push({ user: userId, role: 'member' })
-      await ws.save()
-      return res.json({ message: 'Joined workspace', workspaceId: ws._id })
+      ws.members.push({ user: userId, role: 'member' });
+      await ws.save();
+      return res.json({ message: 'Joined workspace', workspaceId: ws._id });
     } catch (error) {
-      return res.status(500).json({ message: 'Server error' })
+      return res.status(500).json({ message: 'Server error' });
     }
-  }
-]
-
+  },
+];

@@ -18,8 +18,6 @@ import ProtectedLayout from './pages/components/ProtectedLayout';
 import { store } from './store/store';
 import { Provider } from 'react-redux';
 
-
-
 const queryClient = new QueryClient();
 
 // Container styling using Emotion CSS
@@ -63,14 +61,13 @@ const App: React.FC = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Landing />} />
         <Route path="/signup" element={<Landing />} />
-        
 
-      <Route element={<ProtectedLayout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/settings" element={<Dashboard />} />
-      </Route>
+        <Route element={<ProtectedLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/settings" element={<Dashboard />} />
+        </Route>
 
-      <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>
   );
@@ -80,15 +77,15 @@ const App: React.FC = () => {
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Root element not found');
 createRoot(rootElement).render(
-   <Provider store={store}>
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <Theme>
-        <Suspense fallback={<div>Loading translations…</div>}>
-          <App />
-        </Suspense>
-      </Theme>
-    </BrowserRouter>
-  </QueryClientProvider>
-  </Provider>
+  <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Theme>
+          <Suspense fallback={<div>Loading translations…</div>}>
+            <App />
+          </Suspense>
+        </Theme>
+      </BrowserRouter>
+    </QueryClientProvider>
+  </Provider>,
 );

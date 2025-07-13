@@ -3,35 +3,40 @@
     "welcome": "Welcome to JIRA",
     "description": "Join us and explore the features!"
   },
-  "authentication" : {
+  "authentication": {
     "logIn": "Log In",
     "userName": "Username",
     "userNamePlaceholder": "Your username",
-    "email":"Email",
+    "email": "Email",
     "emailPlaceholder": "you@example.com",
-    "password":"Password",
+    "password": "Password",
     "passwordPlaceholder": "********",
     "createAnAccount": "Create an Account",
     "signUp": "Sign Up",
-    "logOut":"Log Out",
+    "logOut": "Log Out",
     "google": "Continue with Google",
     "github": "Continue with GitHub"
   },
-  "workspaces" : {
+  "workspaces": {
     "title": "Workspaces",
     "createWorkspace": "Create Workspace",
-    "cancel":"Cancel",
+    "editWorkspace": "Edit Workspace",
+    "cancel": "Cancel",
     "newWorkspace": "New Workspace",
-    "workspaceName": "Workspace Name",
+    "workspaceName": "Name",
     "workspaceNamePlaceholder": "Workspace Name",
-    "workspaceDescription": "Workspace Description",
+    "workspaceDescription": "Description",
     "workspaceDescriptionPlaceholder": "Workspace Description",
     "workspaceMembers": "Workspace Members",
     "notPartOfAnyWorkspace": "You're not part of any workspace. Create one to access full features and collaborate with others.",
     "saveChanges": "Save Changes",
-    "saveWorkspace":"Save Workspace",
-    "deleteWorkSpace":"Delete Workspace",
-    "deleteWorkspaceConfirmation":"Are you sure you want to delete this workspace?"
+    "saveWorkspace": "Save Workspace",
+    "deleteWorkSpace": "Delete Workspace",
+    "deleteWorkspaceConfirmation": "Are you sure you want to delete this workspace?",
+    "inviteMembers": "Invite Members",
+    "useTheInviteLink": "Use the invite link to add members to your workspace",
+    "resetInviteLink": "Reset Invite Link",
+    "workspaceDetails": "Workspace Details"
   },
   "themeSwitch": {
     "toggleLight": "Switch to Light Theme",

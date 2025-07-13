@@ -3,9 +3,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const useDeleteWorkspace = (workspaceId) => {
   const queryClient = useQueryClient();
-  const token = localStorage.getItem('token')
-  console.log("workspaceId",workspaceId)
-   const deleteWorkspace = async ({ workspaceId }: { workspaceId: string }) => {
+  const token = localStorage.getItem('token');
+  console.log('workspaceId', workspaceId);
+  const deleteWorkspace = async ({ workspaceId }: { workspaceId: string }) => {
     const response = await fetch(`/api/workspaces/${workspaceId}`, {
       headers: {
         'Content-Type': 'application/json',

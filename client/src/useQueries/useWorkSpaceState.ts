@@ -10,7 +10,7 @@ import type { RootState } from '../store/store';
  */
 export function useWorkspacesState() {
   const { items, loading, error } = useSelector(
-    (state: RootState) => state.workspaces
+    (state: RootState) => state.workspaces,
   );
   return { workspaces: items, loading, error };
 }

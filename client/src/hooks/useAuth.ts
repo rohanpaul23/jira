@@ -10,6 +10,6 @@ export const useAuth = () => {
     id,
     email,
     token,
-    isAuthenticated: Boolean(token)
+    isAuthenticated: Boolean(token),
   };
-}
+};

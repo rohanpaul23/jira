@@ -31,7 +31,7 @@ export const initialAuthState: AuthState = {
 // Auth reducer
 export const authReducer: Reducer<AuthState, AuthActionTypes> = (
   state = initialAuthState,
-  action
+  action,
 ): AuthState => {
   switch (action.type) {
     case SET_CREDENTIALS: {
@@ -50,12 +50,12 @@ export const authReducer: Reducer<AuthState, AuthActionTypes> = (
 export const setCredentials = (
   id: string,
   email: string,
-  token: string
+  token: string,
 ): SetCredentialsAction => ({
   type: SET_CREDENTIALS,
-  payload: { id, email, token }
+  payload: { id, email, token },
 });
 
 export const clearCredentials = (): ClearCredentialsAction => ({
-  type: CLEAR_CREDENTIALS
+  type: CLEAR_CREDENTIALS,
 });

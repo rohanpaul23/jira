@@ -19,13 +19,13 @@ export const authenticateToken = (req, res, next) => {
         : res.status(403).json({ message: 'Forbidden: invalid token' });
     }
 
-    console.log("decoded",decoded)
+    console.log('decoded', decoded);
     // Attach user info to req.user with id alias
     req.user = {
       id: decoded.id,
       email: decoded.email,
     };
-    console.log("req.user",req.user)
+    console.log('req.user', req.user);
     next();
   });
 };
