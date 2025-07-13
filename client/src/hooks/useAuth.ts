@@ -4,7 +4,7 @@ import type { RootState } from '../store/store';
 /**
  * Hook to access auth state from Redux
  */
-export function useAuth() {
+export const useAuth = () => {
   const { id, email, token } = useSelector((state: RootState) => state.auth);
   return {
     id,

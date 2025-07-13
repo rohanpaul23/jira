@@ -3,10 +3,7 @@ import { css } from '@emotion/react'
 
 const Home = () => {
   return (
-    <div css={css({
-      background:"red",
-      flex: 5
-    })}>
+    <div>
       Home
     </div>
   )

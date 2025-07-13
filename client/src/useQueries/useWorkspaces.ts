@@ -5,33 +5,39 @@ import { useQuery } from '@tanstack/react-query';
 
 const fetchWorkspaces = async () => {
   const authToken = localStorage.getItem('token')
-  console.log("authToken",authToken)
-  console.log("fetchWorkspaces")
   const headers = {
     Authorization: `Bearer ${authToken}`,
     'Content-Type': 'application/json',
   };
-
+  let data
   const response = await fetch('/api/workspaces?onlyMemberWorkspaces=true',{
     method: 'GET',
     headers,
   });
   if(response.ok){
-    const data = await response.json();
-    console.log("data",data);
+    data = await response.json();
   }
   if (!response.ok) {
     throw new Error(response.statusText);
   }
-  return response.json();
+  return data;
 };
 
 export const useWorkspaces = () => {
-  console.log('useWorkspaces is being executed');
+  const token = localStorage.getItem('token');
   const { data, error, isLoading } = useQuery({
     queryKey: ['workspaces'],
     queryFn: fetchWorkspaces,
-    enabled: true,
+    enabled: Boolean(token),
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    staleTime: Infinity,
+    cacheTime: 0
   });
-  return { data, error, isLoading };
+  console.log("useWorkspaces", data)
+  if (isLoading || !data) {
+    return { data: null, error, isLoading };
+  }
+  return { data, error, isLoading };  
 };

@@ -5,23 +5,29 @@ import { FaTasks } from "react-icons/fa";
 import { IoSettingsOutline, IoAddCircleOutline } from "react-icons/io5";
 import { MdPeopleOutline } from "react-icons/md";
 import { useTranslation } from "react-i18next";
-import { useWorkspaces } from '../useQueries/useWorkspaces';
+import { useWorkspaces } from '../../useQueries/useWorkspaces';
 import Select from 'react-select'
 import CreateWorkspace from '../Workspaces/CreateWorkpace';
+import { useWorkspacesState } from '../../hooks/useWorkspacesState';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 
 
 const SideNavBar = () => {
   const [t] = useTranslation();
-  // const { data, error, isLoading } = useWorkspaces();
-  const [createWorkspace,setCreateWorkspace] = useState(false)
-  const data = []
+  const navigate = useNavigate();
+  const {data, error,isLoading } = useWorkspaces();
+  const [createWorkspace,setCreateWorkspace] = useState(data?.length === 0)
   const [selectedMenuItem, setSelectedMenuItem] = useState();
+  const dispatch = useDispatch()
+  
 
   const menuItems = [
     { icon: <IoHomeOutline />, label: "Home" },
     { icon: <FaTasks />, label: "My Tasks" },
-    { icon: <IoSettingsOutline />, label: "Settings" },
+    { icon: <IoSettingsOutline />, label: "Settings", onClick: () => navigate('/settings'),
+ },
     { icon: <MdPeopleOutline />, label: "Members" },
   ];
 
@@ -43,19 +49,30 @@ const SideNavBar = () => {
   });
 
   const options = useMemo(() => {
+    console.log("options useMemo",data)
     return data?.map((workspace) => ({
-      value: workspace.id,
+      value: workspace._id,
       label: workspace.name,
     }));
   }, [data]);
 
+
+  const handleSelectedMenuItem = useCallback((index, item) => {
+    setSelectedMenuItem(index);
+    if(item === 'Settings'){
+      navigate('/settings')
+    }
+  }, []);
+
+const handleSelect = (selectedOption) => {
+  const selectedWorkSpace = data?.find(workspace => workspace._id === selectedOption.value)
+  dispatch({type: "UPDATE_SELECTED_WORKSPACE", payload: selectedWorkSpace})
+};
+  
   return (
     <>
-    {createWorkspace && <CreateWorkspace show={createWorkspace} handleClose={() => setCreateWorkspace(false)}/>}
-    <div css={css({
-      background: "#c7c5c5",
-      flex: 1
-    })}>
+    {createWorkspace && <CreateWorkspace workspaces={data} show={createWorkspace} handleClose={() => setCreateWorkspace(false)}/>}
+    <div>
       <div css={css({
         display: "flex",
         flexDirection: "row",
@@ -63,10 +80,12 @@ const SideNavBar = () => {
         alignItems: "center",
         padding: 10
       })}>{t("workspaces.title")} <IoAddCircleOutline onClick={() => setCreateWorkspace(true)} /></div>
-      <Select options={options} css={css({
+      <Select options={options}  css={css({
         width: "80%",
         margin: "0px 10px"
-      })} />
+      })}
+      onChange={handleSelect}
+      />
       <div css={css({
         display: "flex",
         flexDirection: "column",
@@ -75,7 +94,7 @@ const SideNavBar = () => {
       })}>
         {menuItems.map((item, index) => (
           <div key={index}
-            onClick={() => setSelectedMenuItem(index)}
+            onClick={() => handleSelectedMenuItem(index, item.label === 'Settings' ? item.label : '')}
             css={
               selectedMenuItem === index
                 ? css([menuItemStyle, menuItemSelectedStyle])

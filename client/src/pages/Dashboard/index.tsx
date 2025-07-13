@@ -6,11 +6,22 @@ import Logo from "../components/Logo";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from "@radix-ui/themes";
+import Settings from "../Settings";
 
 const Dashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [t] = useTranslation();
+
+  console.log("location",location)
+
+  const renderComponent = () => {
+    if (location.pathname === "/settings") {
+      return <Settings/>
+    } 
+    return <Home />
+  };
+
   return (
     <div
       css={css({
@@ -53,8 +64,18 @@ const Dashboard = () => {
           flex: 9,
         })}
       >
+        <div css={css({
+              background: "#c7c5c5",
+              flex: 1
+            })}>
         <SideNavBar />
-        <Home />
+        </div>
+        <div css={css({
+              background:"red",
+              flex: 5
+            })}>
+          {renderComponent()}
+        </div>
       </div>
     </div>
   );

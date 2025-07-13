@@ -67,6 +67,7 @@ const App: React.FC = () => {
 
       <Route element={<ProtectedLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/settings" element={<Dashboard />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

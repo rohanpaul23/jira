@@ -35,9 +35,7 @@ export const authReducer: Reducer<AuthState, AuthActionTypes> = (
 ): AuthState => {
   switch (action.type) {
     case SET_CREDENTIALS: {
-      const { id, email, token } = (action as SetCredentialsAction).payload;
-      localStorage.setItem('token', token);
-      return { id, email, token };
+      return { ...state, ...action.payload };
     }
     case CLEAR_CREDENTIALS: {
       localStorage.removeItem('token');

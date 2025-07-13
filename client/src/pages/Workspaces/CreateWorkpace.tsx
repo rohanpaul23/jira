@@ -1,14 +1,17 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Button,Modal } from 'react-bootstrap';
+import { Alert, Button,Modal } from 'react-bootstrap';
 import "./workspace.scss"
-import { useCreateWorkspace } from '../useQueries/useCreateWorkspace';
+import { useCreateWorkspace } from '../../useQueries/useCreateWorkspace';
 import { useTranslation } from 'react-i18next';
 import { css } from '@emotion/react';
 import "./workspace.scss"
+import { FaInfoCircle } from "react-icons/fa";
+import { useAuth } from '../../hooks/useAuth';
 
 
-const CreateWorkspace = ({ show, handleClose }) => {
+
+const CreateWorkspace = ({workspaces, show, handleClose }) => {
   const [t] = useTranslation();
   const { mutate, isLoading, error } = useCreateWorkspace();
 
@@ -34,31 +37,11 @@ const CreateWorkspace = ({ show, handleClose }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} className="workspace-modal"  appElement={document.getElementById('root')}
-      style={{
-        overlay: {
-          position: 'fixed',
-          top: "20%",
-          left: "38%",
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        },
-        content: {
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          maxWidth: '500px',
-          margin: '0',
-          backgroundColor: '#fff',
-          padding: '20px',
-          border: 'none',
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.2)',
-        },
-      }}>
+    <Modal show={show} onHide={handleClose}  appElement={document.getElementById('root')} style={{
+      left: "38% !important"
+    }}>
         <Modal.Header closeButton>
-          <Modal.Title className="modal-title">Create Workspace</Modal.Title>
+          <Modal.Title className="modal-title">{t('workspaces.createWorkspace')}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="modal-body">
           <Formik
@@ -89,7 +72,7 @@ const CreateWorkspace = ({ show, handleClose }) => {
                   {t('workspaces.cancel')}
                 </Button>
                 <Button type="submit" disabled={isSubmitting || Object.keys(errors).length !== 0 } variant="primary" className="submit-btn">
-                  {t('workspaces.createWorkspace')}
+                  {t('workspaces.saveWorkspace')}
                 </Button>
                 </div>
               </Form>

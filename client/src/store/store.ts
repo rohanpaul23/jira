@@ -7,7 +7,7 @@ import { workspaceReducer, WorkspacesState } from './reducers/workspaceReducer';
 // Root state interface
 type RootState = {
   auth: AuthState;
-  workspaces: WorkspacesState;
+  workspace: WorkspacesState;
 };
 
 
@@ -17,7 +17,7 @@ const isDevelopment = import.meta.env.MODE === 'development';
 // Combine reducers
 const rootReducer = combineReducers<RootState>({
   auth: authReducer,
-  workspaces: workspaceReducer,
+  workspace: workspaceReducer,
 });
 
 // Create Redux store with DevTools enhancer (no-op if extension not installed)

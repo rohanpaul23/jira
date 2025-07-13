@@ -16,13 +16,14 @@ export interface WorkspaceInput {
 export function useCreateWorkspace() {
   const queryClient = useQueryClient();
 
-  const token = import.meta.env.VITE_API_TOKEN
+  const token = localStorage.getItem('token')
   return useMutation({
     /**
      * Mutation function: calls backend to create a workspace.
      */
     // console.log("process.env.API_TOKEN",process.env.API_TOKEN)
     mutationFn: async (data: WorkspaceInput) => {
+      console.log("data",data)
       const response = await fetch('/api/workspaces', {
         method: 'POST',
         headers: {
@@ -36,7 +37,6 @@ export function useCreateWorkspace() {
         const errorPayload = await response.json();
         throw new Error(errorPayload.message || 'Failed to create workspace');
       }
-
       return response.json();
     },
 
