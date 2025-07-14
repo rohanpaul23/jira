@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@radix-ui/themes';
 import Settings from '../Settings';
+import JoinWorkspace from '../JoinWorkSpace';
 
 const Dashboard = () => {
   const location = useLocation();
@@ -18,6 +19,9 @@ const Dashboard = () => {
   const renderComponent = () => {
     if (location.pathname === '/settings') {
       return <Settings />;
+    }
+    else if(location.pathname === '/join-workspace'){
+      return <JoinWorkspace/>
     }
     return <Home />;
   };

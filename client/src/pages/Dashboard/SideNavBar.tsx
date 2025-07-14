@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { css } from '@emotion/react';
 import { IoHomeOutline } from 'react-icons/io5';
 import { FaTasks } from 'react-icons/fa';
@@ -16,7 +16,7 @@ const SideNavBar = () => {
   const [t] = useTranslation();
   const navigate = useNavigate();
   const { data, error, isLoading } = useWorkspaces();
-  const [createWorkspace, setCreateWorkspace] = useState(data?.length === 0);
+  const [createWorkspace, setCreateWorkspace] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState();
   const dispatch = useDispatch();
 
@@ -47,6 +47,7 @@ const SideNavBar = () => {
     backgroundColor: '#1d4ed8',
     color: '#fff',
   });
+
 
   const options = useMemo(() => {
     console.log('options useMemo', data);

@@ -36,7 +36,10 @@
     "inviteMembers": "Invite Members",
     "useTheInviteLink": "Use the invite link to add members to your workspace",
     "resetInviteLink": "Reset Invite Link",
-    "workspaceDetails": "Workspace Details"
+    "workspaceDetails": "Workspace Details",
+    "joinWorkSpaceTitle": "Join Workspace",
+    "joinWorkSpace": "You have been invited to join {{workspaceName}} to collaborate with others."
+    
   },
   "themeSwitch": {
     "toggleLight": "Switch to Light Theme",

@@ -1,6 +1,16 @@
 import Workspace from '../models/WorkSpace.js';
 import { body, param, validationResult } from 'express-validator';
-import mongoose from 'mongoose';
+import jwt from 'jsonwebtoken';
+
+
+const validate = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
+
 
 /**
  * Get all workspaces
@@ -27,6 +37,40 @@ export const getAllWorkspaces = async (req, res) => {
   }
 };
 
+
+export const getWorkspaceByInviteToken = [
+  param('token').notEmpty(),
+  validate,
+  async (req, res) => {
+    const { token } = req.params;
+    let payload;
+    try {
+      payload = jwt.verify(token, process.env.INVITE_SECRET);
+    } catch (err) {
+      return res.status(400).json({ message: 'Invalid or expired invite token' });
+    }
+    const { workspaceId } = payload;
+    try {
+      const ws = await Workspace.findById(workspaceId)
+        .populate('owner', 'username email')
+        .select('name description owner createdAt');
+      if (!ws) {
+        return res.status(404).json({ message: 'Workspace not found' });
+      }
+      // Return minimal preview info
+      return res.json({
+        id: ws._id,
+        name: ws.name,
+        description: ws.description,
+        owner: ws.owner,
+        createdAt: ws.createdAt
+      });
+    } catch (error) {
+      return res.status(500).json({ message: 'Server error' });
+    }
+  }
+];
+
 /**
  * Get a single workspace by ID
  */
@@ -50,8 +94,6 @@ export const getWorkspaceById = async (req, res) => {
  * Create a new workspace
  */
 export const createWorkspace = async (req, res) => {
-  console.log('Auth header:', req.headers.authorization);
-  console.log('req.user:', req.user);
   if (!req.user?.id) {
     return res
       .status(401)
@@ -67,8 +109,15 @@ export const createWorkspace = async (req, res) => {
       owner: ownerId,
       members: [{ user: ownerId, role: 'owner' }, ...(members || [])],
     });
-    await workspace.save();
-    console.log('workspace saved', workspace);
+    const inviteToken = jwt.sign(
+      { workspaceId: workspace._id.toString() },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    workspace.inviteLink = `${baseUrl}/join-workspace?inviteToken=${inviteToken}`;
+
+     await workspace.save();
     res.status(201).json(workspace);
   } catch (err) {
     console.error('Error creating workspace:', err);
@@ -117,15 +166,12 @@ export const updateWorkspace = async (req, res) => {
 export const deleteWorkspace = async (req, res) => {
   try {
     const workspaceId = req.params.workspaceId;
-    console.log('workspaceId', workspaceId);
     const workspace = await Workspace.findById(workspaceId);
     if (!workspace) {
       return res.status(404).json({ message: 'Workspace not found' });
     }
 
-    console.log('req.user.id', req.user.id);
     // Check if the user making the request is the owner of the workspace
-    console.log('workspaceowener', workspace.owner.toString());
     if (workspace.owner.toString() !== req.user.id) {
       return res
         .status(403)
@@ -138,14 +184,6 @@ export const deleteWorkspace = async (req, res) => {
     console.log('error', error);
     return res.status(500).json({ message: 'Error deleting workspace' });
   }
-};
-
-const validate = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
 };
 
 // GET /api/workspaces/:id/invite
@@ -178,17 +216,58 @@ export const getInviteCode = [
   },
 ];
 
-// POST /api/workspaces/join
-export const joinWorkspace = [
-  body('inviteCode').isHexadecimal().isLength({ min: 8, max: 8 }),
+export const generateNewInviteCode = [
+  param('id').isMongoId(),
   validate,
   async (req, res) => {
     try {
-      const userId = req.user.id;
-      const { inviteCode } = req.body;
-      const ws = await Workspace.findOne({ inviteCode });
+      const ws = await Workspace.findById(req.params.id);
       if (!ws) {
-        return res.status(404).json({ message: 'Invalid invite code' });
+        return res.status(404).json({ message: 'Workspace not found' });
+      }
+      const userId = req.user.id;
+      if (!ws.owner.equals(userId)) {
+        return res.status(403).json({ message: 'Forbidden: only owner can regenerate invite code' });
+      }
+      
+       const inviteToken = jwt.sign(
+        { workspaceId: ws._id.toString() },
+        process.env.INVITE_SECRET,
+        { expiresIn: '7d' }
+      )
+      // build and save the full link
+      const baseUrl = process.env.FRONTEND_URL || 'http://localhost:3000'
+      ws.inviteLink = `${baseUrl}/join-workspace?inviteToken=${inviteToken}`
+      await ws.save()
+      return res.json({ inviteLink: ws.inviteLink });
+    } catch (error) {
+      console.log("error",error)
+      return res.status(500).json({ message: 'Server error' });
+    }
+  }
+];
+
+
+// POST /api/workspaces/join
+export const joinWorkspace = [
+  async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const { inviteToken } = req.body;
+
+
+      let payload
+      try {
+        payload = jwt.verify(inviteToken, process.env.INVITE_SECRET)
+      } catch (err) {
+        return res.status(400).json({ message: 'Invalid or expired invite token' })
+      }
+
+      const workspaceId = payload.workspaceId
+      console.log("workspaceId",workspaceId)
+      const ws = await Workspace.findById(workspaceId);
+      if (!ws) {
+        return res.status(404).json({ message: 'Invalid invite token' });
       }
       const alreadyMember = ws.members.some((m) => m.user.equals(userId));
       if (alreadyMember) {
@@ -201,4 +280,28 @@ export const joinWorkspace = [
       return res.status(500).json({ message: 'Server error' });
     }
   },
+];
+
+export const sendInviteLink = [
+  param('id').isMongoId(),
+  validate,
+  async (req, res) => {
+    const ws = await Workspace.findById(req.params.id);
+    if (!ws) return res.status(404).json({ message: 'Workspace not found' });
+    if (!ws.owner.equals(req.user.id)) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    // Create a JWT that embeds the workspace ID and expires in 7 days
+    const token = jwt.sign(
+      { workspaceId: ws._id.toString() },
+      process.env.INVITE_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    const link = `${process.env.FRONTEND_URL}/join-workspace?inviteToken=${token}`;
+
+    // TODO: email `link` to the user (via nodemailer or your email service)
+    return res.json({ message: 'Invite link generated', link });
+  }
 ];

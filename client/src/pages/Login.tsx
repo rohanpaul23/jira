@@ -76,7 +76,22 @@ const Login: React.FC = () => {
       const data = await res.json();
       dispatch(setCredentials(data.userId, data.email, data.token));
       localStorage.setItem('token', data.token);
-      navigate('/dashboard', { state: { from: location } });
+      const params = new URLSearchParams(location.search)
+      const redirectTo = params.get('redirect') || '/'
+      let inviteToken: string | null = null
+      if (redirectTo.includes('?')) {
+        const [, query] = redirectTo.split('?')
+        const redirectParams = new URLSearchParams(query)
+        inviteToken = redirectParams.get('inviteToken')
+      }
+      if (inviteToken) {
+        navigate(`/join-workspace?inviteToken=${inviteToken}`, { replace: true })
+        return
+      } else {
+        navigate('/dashboard', { state: { from: location } });
+        return
+      }
+
     } catch (err) {
       console.error('Login failed:', err);
     }

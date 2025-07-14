@@ -17,6 +17,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ProtectedLayout from './pages/components/ProtectedLayout';
 import { store } from './store/store';
 import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import JoinWorkspace from './pages/JoinWorkSpace';
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,7 @@ const App: React.FC = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Landing />} />
         <Route path="/signup" element={<Landing />} />
+        <Route path="/join-workspace" element={<Dashboard />} />
 
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
@@ -83,6 +86,7 @@ createRoot(rootElement).render(
         <Theme>
           <Suspense fallback={<div>Loading translations…</div>}>
             <App />
+            <ToastContainer position="top-right" autoClose={5000} />
           </Suspense>
         </Theme>
       </BrowserRouter>

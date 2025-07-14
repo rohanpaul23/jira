@@ -41,7 +41,8 @@ const Landing: React.FC = () => {
       return <Login />;
     } else if (location.pathname === '/signup') {
       return <Signup />;
-    } else {
+    } 
+    else {
       return <Login />;
     }
   };

@@ -36,7 +36,6 @@ export const useWorkspaces = () => {
     staleTime: Infinity,
     cacheTime: 0,
   });
-  console.log('useWorkspaces', data);
   if (isLoading || !data) {
     return { data: null, error, isLoading };
   }

@@ -51,8 +51,6 @@ const Signup: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password }),
       });
-      console.log('Res', res);
-
       const data = await res.json();
       if (!res.ok && data.msg === 'User already exists') {
         throw 'A user with the entered email already exists';

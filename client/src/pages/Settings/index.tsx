@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Alert, Button, Modal } from 'react-bootstrap';
@@ -14,6 +14,8 @@ import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import { IoCopySharp } from 'react-icons/io5';
 import CreateOrEditWorkspace from '../Workspaces/CreateWorkpace';
+import { toast } from 'react-toastify';
+
 
 const Settings = () => {
   const [t] = useTranslation();
@@ -24,22 +26,14 @@ const Settings = () => {
   const selectedWorkspace = useSelector(
     (state) => state.workspace.selectedWorkspace,
   );
+  const [generatedInviteLink, setGeneratedInvitedLink] = useState("");
   const allWorkSpaces = useSelector((state) => state.workspace.allWorkSpaces);
 
   console.log('allWorkSpaces', allWorkSpaces);
 
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    description: Yup.string().optional(),
-  });
-
-  const initialValues = {
-    name: selectedWorkspace?.name,
-    description: selectedWorkspace?.description,
-  };
-  const onSubmit = () => {
-    console.log('onSubmit');
-  };
+  useEffect(()=>{
+    setGeneratedInvitedLink(selectedWorkspace?.inviteLink)
+  },[selectedWorkspace])
 
   const deleteWorkSpacePermanently = async () => {
     try {
@@ -49,7 +43,33 @@ const Settings = () => {
     }
   };
 
-  console.log('selectedWorkspace', selectedWorkspace);
+
+async function regenerateInvite() {
+  const token =   localStorage.getItem('token');
+  const res = await fetch(`/api/workspaces/${selectedWorkspace?._id}/invite/regenerate`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.message || 'Failed to regenerate invite code');
+  }
+
+  const { inviteLink } = await res.json();
+  setGeneratedInvitedLink(inviteLink)
+}
+
+  const copyToClipboard = () => {
+    document.body.focus(); // Add this line to focus the document
+    navigator.clipboard.writeText(generatedInviteLink).then(() => {
+      toast.success("Invite code copied to clipboard!");
+    });
+  };
+
   return (
     <>
       {deleteWorkSpace && (
@@ -127,10 +147,10 @@ const Settings = () => {
             <input
               css={styles.inviteLinkInput}
               type="text"
-              value={''}
+              value={generatedInviteLink}
               disabled={true}
             />
-            <IoCopySharp />
+            <IoCopySharp onClick={() => copyToClipboard()} />
           </div>
           <div
             css={css({
@@ -144,7 +164,7 @@ const Settings = () => {
                 color: white;
               `}
               type="submit"
-              onClick={() => deleteWorkSpacePermanently()}
+              onClick={() => regenerateInvite()}
               disabled={false}
               variant="primary"
               className="submit-btn"
